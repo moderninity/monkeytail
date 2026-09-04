@@ -227,3 +227,8 @@ happily load both, and both will fight over inventory slot 9.
   which would change vanilla behaviour for every caller in the game. Not worth it.
 - No position or appearance settings. The indicator is vanilla's own sprite in a fixed place;
   moving it further, or back to the right, is changing one constant in `HotbarSelectionMixin`.
+
+## Licence
+
+MIT — see `LICENSE`. Nothing third-party is bundled: Sophisticated Backpacks is a compile-time
+optional dependency only, and no code, asset or string from `Hold My Beer: Empty Hand` is present.
