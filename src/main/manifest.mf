@@ -1,0 +1,6 @@
+Specification-Title: monkeytail
+Specification-Vendor: moderninity
+Specification-Version: 1
+Implementation-Title: Monkey Tail
+Implementation-Vendor: moderninity
+Implementation-Version: 1.0.0

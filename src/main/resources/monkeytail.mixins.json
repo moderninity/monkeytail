@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.moderninity.monkeytail.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "PlayerMixin",
+    "ServerSlotMixin"
+  ],
+  "client": [
+    "ClientSlotMixin",
+    "HotbarSelectionMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

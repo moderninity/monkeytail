@@ -1,0 +1,46 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "All Rights Reserved"
+
+[[mods]]
+modId = "monkeytail"
+version = "1.0.0"
+displayName = "Monkey Tail"
+authors = "moderninity"
+description = '''
+A tenth hotbar slot that can never hold anything. One key puts your hands down, so blocks and
+machines that want an empty hand just work, without unequipping your shield or shuffling your
+hotbar first.
+
+It is a real inventory slot rather than a drawn-on extra, and no other mod can see it as part of
+the hotbar, so it does not fight with hotbar, HUD or inventory mods. Default key is ` / ~ ,
+rebindable under its own Controls category. Anything the game tries to put in your hand while the
+slot is selected goes to your inventory instead, or into a bag you are carrying if the inventory
+is full.
+'''
+
+[[mixins]]
+config = "monkeytail.mixins.json"
+
+[[dependencies.monkeytail]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1.0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.monkeytail]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1,1.22)"
+ordering = "NONE"
+side = "BOTH"
+
+# Only used to find a backpack that is being worn rather than carried. Without it the mod still
+# fills bags that are in your inventory, armour slots or offhand, through the standard capability.
+[[dependencies.monkeytail]]
+modId = "sophisticatedbackpacks"
+type = "optional"
+versionRange = "[0,)"
+ordering = "AFTER"
+side = "BOTH"
