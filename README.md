@@ -232,3 +232,8 @@ happily load both, and both will fight over inventory slot 9.
 
 MIT — see `LICENSE`. Nothing third-party is bundled: Sophisticated Backpacks is a compile-time
 optional dependency only, and no code, asset or string from `Hold My Beer: Empty Hand` is present.
+
+`build.sh` copies `LICENSE` into the jar root, since MIT asks that the notice travel with copies.
+It is copied from the repository root at build time rather than kept a second time under
+`src/main/resources/`, so there is only ever one file to edit. Nothing else that is not code or a
+resource goes in: no `*.md`, no `build.sh`, no `port-tools` scripts.

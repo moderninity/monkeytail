@@ -67,6 +67,9 @@ find "$HERE/src/main/java" -name '*.java' | while read -r p; do printf '"%s"\n' 
 
 # --- package -----------------------------------------------------------------------------
 cp -r "$HERE/src/main/resources/." "$OUT/"
+# MIT asks that the notice travel with copies, so the jar carries one. Copied from the repo root
+# at build time rather than kept a second time under resources/, so there is one file to edit.
+cp "$HERE/LICENSE" "$OUT/LICENSE"
 rm -f "$JAR"
 "$JDK/jar" --create --file "$JAR" --manifest "$HERE/src/main/manifest.mf" -C "$OUT" .
 
