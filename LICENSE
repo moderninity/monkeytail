@@ -30,3 +30,9 @@ is Minecraft's own API rather than anyone's authorship. See the README.
 
 No third-party code is bundled. Sophisticated Backpacks is an optional compile-
 time dependency only, resolved from the local install and never redistributed.
+
+The MIT grant above covers the code. It does NOT cover mod_logo.png, which is a
+frame from Dragon Ball and remains the property of its rights holders (Toei
+Animation / Bird Studio / Shueisha). It is used here as a placeholder for a
+private build and is not licensed for redistribution; it must be replaced with
+an original image before this mod is published anywhere.

@@ -73,6 +73,15 @@ cp "$HERE/LICENSE" "$OUT/LICENSE"
 rm -f "$JAR"
 "$JDK/jar" --create --file "$JAR" --manifest "$HERE/src/main/manifest.mf" -C "$OUT" .
 
+# --- declared assets must exist -----------------------------------------------------------
+# A missing logo is silent in game: the mod list just shows a blank tile. Same check
+# tools/verify-jar.sh does in chalkboard, kept inline here because this build has no tools dir.
+ICON="$(sed -n 's/^ *logoFile *= *"\([^"]*\)".*/\1/p' "$HERE/src/main/resources/META-INF/neoforge.mods.toml" | tr -d '\r')"
+if [ -n "$ICON" ]; then
+    "$JDK/jar" --list --file "$JAR" | grep -qx "$ICON" \
+        || { echo "error: neoforge.mods.toml declares logoFile '$ICON' but it is not in the jar" >&2; exit 1; }
+fi
+
 # --- static checks that catch what compiling does not -------------------------------------
 # eventbus_check catches a listener registration that compiles but kills mod loading;
 # linkcheck catches a class or method that exists in the build but not at runtime.

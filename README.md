@@ -233,6 +233,12 @@ happily load both, and both will fight over inventory slot 9.
 MIT — see `LICENSE`. Nothing third-party is bundled: Sophisticated Backpacks is a compile-time
 optional dependency only, and no code, asset or string from `Hold My Beer: Empty Hand` is present.
 
+**`mod_logo.png` is not MIT and cannot be published.** It is a Dragon Ball frame, standing in for
+an original logo in a private build. `build.sh` fails if `neoforge.mods.toml` declares a
+`logoFile` that is not in the jar, because a missing one is silent in game — the mod list just
+shows a blank tile — but nothing can check whether the image is *ours*. Replace it before this
+goes to Modrinth or CurseForge.
+
 `build.sh` copies `LICENSE` into the jar root, since MIT asks that the notice travel with copies.
 It is copied from the repository root at build time rather than kept a second time under
 `src/main/resources/`, so there is only ever one file to edit. Nothing else that is not code or a
