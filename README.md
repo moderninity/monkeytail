@@ -2,21 +2,37 @@
 
 A tenth hotbar slot that can never hold anything. One key puts your hands down.
 
-**NeoForge 21.1 / Minecraft 1.21.1, written from scratch — no upstream code, assets, strings or
-version lineage.** Build output: `output/monkeytail-neoforge-1.21.1-1.0.0.jar`.
+**NeoForge 21.1 / Minecraft 1.21.1.**
 
-## Why it exists
+## About
 
-`Hold My Beer: Empty Hand` (ItsWormy / littlebroto1, CurseForge project 872312) does this on
-Forge 1.20.1 and was last updated 30 June 2024. Its author has not been reachable for over a
-year, so permission to reuse the code or the hands icon could not be obtained. This is an
-independent implementation of the same idea. Nothing from that mod ships here: different package,
-different mod id, different name, different class and translation keys, no textures, and a
-version number that starts at 1.0.0 rather than continuing his 1.2.3.
+Monkey Tail is actually a QOL mod I can't do without with all the mods now requiring the empty
+hand click. I can't manage my inventory and I don't want to!
+[Hold My Beer](https://www.curseforge.com/minecraft/mc-mods/hold-my-beer) on Forge 1.20.1 did
+this for me and I reached out to the author to get permission to port it over to neoforge.
+Unfortunately, he didn't respond and hasn't had any activity anywhere as far as I can tell.
 
-The one thing that is genuinely the same is the *approach*, and it could not be otherwise —
-Minecraft has exactly two places that reject a hotbar slot above 8, and any mod doing this has to
-widen those same two checks. That is the game's API, not anyone's authorship.
+That also means I had to use completely new code. I took the same 10th hotbar slot concept and
+tried my own thing! I did use AI though I'm not that good at coding yet and not being allowed to
+use the other mod as a basis really threw me for a loop.
+
+Instead of the 0 key **its ` or ~** because that's something actually reachable. You can't scroll
+to it.
+
+I don't have a cute little hand indicator either, the selector icon just kind of float over the
+edge of the hot bar. I tried making my own icon assets with my other mod and that turned out
+horrible so I elected not to do it again. Also, it should technically be visually compatible with
+anything now!
+
+OH another thing I did was that if you're on your empty hand slot and pick something up but your
+main inventory is full it goes straight to your backpack! on back slot, curios, and accessories
+slots too! (mostly)
+
+Enjoy the mod!
+
+---
+
+The rest of this file is the technical record: what it does, how, and what was checked.
 
 ## The idea, and why it does not fight with other mods
 
@@ -209,11 +225,8 @@ repository; if `port-tools/` is not beside it the jar still builds and they are 
 
 ## Installing
 
-```
-cp output/monkeytail-neoforge-1.21.1-1.0.0.jar \
-   "/d/Games/Modding/PrismLauncher/instances/Cosmic Ambition 1211/minecraft/mods/"
-rm "/d/Games/Modding/PrismLauncher/instances/Cosmic Ambition 1211/minecraft/mods/holdmybeer-neoforge-1.21.1-1.2.3.jar"
-```
+Drop `monkeytail-neoforge-1.21.1-1.0.0.jar` into your instance's `mods/` folder, and take
+`holdmybeer-*.jar` out of it if it is there.
 
 The old jar **must** come out. The mod ids differ (`monkeytail` vs `holdmybeer`), so FML will
 happily load both, and both will fight over inventory slot 9.
@@ -233,11 +246,19 @@ happily load both, and both will fight over inventory slot 9.
 MIT — see `LICENSE`. Nothing third-party is bundled: Sophisticated Backpacks is a compile-time
 optional dependency only, and no code, asset or string from `Hold My Beer: Empty Hand` is present.
 
-**`mod_logo.png` is not MIT and cannot be published.** It is a Dragon Ball frame, standing in for
-an original logo in a private build. `build.sh` fails if `neoforge.mods.toml` declares a
-`logoFile` that is not in the jar, because a missing one is silent in game — the mod list just
-shows a blank tile — but nothing can check whether the image is *ours*. Replace it before this
-goes to Modrinth or CurseForge.
+To be precise about that, since permission was asked for and never came: this is an independent
+implementation of the same idea. Different package, different mod id, different name, different
+class and translation keys, no textures, and a version that starts at 1.0.0 rather than
+continuing that mod's 1.2.3. The one thing genuinely shared is the *approach*, and it could not
+be otherwise — Minecraft has exactly two places that reject a hotbar slot above 8, and any mod
+doing this has to widen those same two checks. That is the game's API, not anyone's authorship.
+
+**`mod_logo.png` is not covered by the MIT grant.** It is a frame from Dragon Ball, used as a
+placeholder for the name's sake, and it belongs to its rights holders — not to this project. It
+is due to be replaced with an original image; until then, do not treat it as redistributable.
+`build.sh` fails if `neoforge.mods.toml` declares a `logoFile` that is not in the jar, since a
+missing one is silent in game — the mod list just shows a blank tile — but no build check can
+tell whether the image is *ours*.
 
 `build.sh` copies `LICENSE` into the jar root, since MIT asks that the notice travel with copies.
 It is copied from the repository root at build time rather than kept a second time under
