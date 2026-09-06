@@ -3,17 +3,30 @@
 # against jars already on this machine:
 #   - Minecraft 1.21.1 patched with NeoForge: the neoformruntime "compiledWithNeoForge" artifact
 #   - the NeoForge API and its libraries: the Prism Launcher shared library store
-#   - Sophisticated Backpacks: the instance's own jar, for the optional worn-bag lookup only
+#   - Sophisticated Backpacks: any copy of the jar, for the optional worn-bag lookup only
 set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
-JDK="${JDK:-/c/Program Files/Eclipse Adoptium/jdk-21.0.11.10-hotspot/bin}"
-LIB="${PRISM_LIBS:-/d/Games/Modding/PrismLauncher/libraries}"
-MODS="${MODS_DIR:-/d/Games/Modding/PrismLauncher/instances/Cosmic Ambition 1211/minecraft/mods}"
+
+# Where those jars live is a property of your machine, not of this mod, so no path is baked in.
+# Put yours in build.local.sh (gitignored) - copy build.local.sh.example - or set them in the
+# environment. JDK may stay empty, in which case javac and jar come from PATH.
+[ -f "$HERE/build.local.sh" ] && . "$HERE/build.local.sh"
+JDK="${JDK:-}"
+LIB="${PRISM_LIBS:-}"
+MODS="${MODS_DIR:-}"
+
+need() { echo "error: $1 is not set. See build.local.sh.example." >&2; exit 1; }
+[ -n "$LIB"  ] || need "PRISM_LIBS (a Prism/MultiMC 'libraries' folder)"
+[ -n "$MODS" ] || need "MODS_DIR (a mods folder holding sophisticatedbackpacks + sophisticatedcore)"
+[ -d "$LIB"  ] || { echo "error: PRISM_LIBS is not a directory: $LIB" >&2; exit 1; }
+[ -d "$MODS" ] || { echo "error: MODS_DIR is not a directory: $MODS" >&2; exit 1; }
+JAVAC="${JDK:+$JDK/}javac"
+JAR_TOOL="${JDK:+$JDK/}jar"
 
 # Compile against the OLDEST NeoForge 21.1 in the store, not the newest. Building against an old
 # API and running on a newer one is safe; the reverse is not, so this keeps the jar usable on
-# every 21.1.x from here up, including the 21.1.249 the instance currently runs.
+# every 21.1.x from here up.
 NEOFORGE_VERSION="${NEOFORGE_VERSION:-21.1.233}"
 
 VERSION="1.0.0"
@@ -60,7 +73,7 @@ CP_LIST="$HERE/build/cp.list"
 printf -- '-cp "%s"\n' "$(paste -sd';' - < "$CP_LIST")" > "$HERE/build/args.txt"
 find "$HERE/src/main/java" -name '*.java' | while read -r p; do printf '"%s"\n' "$(cygpath -m "$p")"; done > "$HERE/build/sources.txt"
 
-"$JDK/javac" -encoding UTF-8 --release 21 -nowarn -proc:none \
+"$JAVAC" -encoding UTF-8 --release 21 -nowarn -proc:none \
     "@$(cygpath -m "$HERE/build/args.txt")" \
     -d "$(cygpath -m "$OUT")" \
     "@$(cygpath -m "$HERE/build/sources.txt")"
@@ -71,14 +84,14 @@ cp -r "$HERE/src/main/resources/." "$OUT/"
 # at build time rather than kept a second time under resources/, so there is one file to edit.
 cp "$HERE/LICENSE" "$OUT/LICENSE"
 rm -f "$JAR"
-"$JDK/jar" --create --file "$JAR" --manifest "$HERE/src/main/manifest.mf" -C "$OUT" .
+"$JAR_TOOL" --create --file "$JAR" --manifest "$HERE/src/main/manifest.mf" -C "$OUT" .
 
 # --- declared assets must exist -----------------------------------------------------------
 # A missing logo is silent in game: the mod list just shows a blank tile. Same check
 # tools/verify-jar.sh does in chalkboard, kept inline here because this build has no tools dir.
 ICON="$(sed -n 's/^ *logoFile *= *"\([^"]*\)".*/\1/p' "$HERE/src/main/resources/META-INF/neoforge.mods.toml" | tr -d '\r')"
 if [ -n "$ICON" ]; then
-    "$JDK/jar" --list --file "$JAR" | grep -qx "$ICON" \
+    "$JAR_TOOL" --list --file "$JAR" | grep -qx "$ICON" \
         || { echo "error: neoforge.mods.toml declares logoFile '$ICON' but it is not in the jar" >&2; exit 1; }
 fi
 
@@ -96,4 +109,4 @@ fi
 
 echo
 echo "built: $JAR   (compiled against NeoForge $NEOFORGE_VERSION)"
-"$JDK/jar" --list --file "$JAR" | sed 's|^|  |'
+"$JAR_TOOL" --list --file "$JAR" | sed 's|^|  |'

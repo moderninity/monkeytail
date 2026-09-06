@@ -1,0 +1,15 @@
+# Copy to build.local.sh (gitignored) and point these at your own install.
+# build.sh sources it if it exists; anything set in the environment wins over it.
+
+# A Prism Launcher / MultiMC shared library store - the folder holding net/neoforged/neoforge/...
+export PRISM_LIBS="/path/to/PrismLauncher/libraries"
+
+# Any mods folder containing sophisticatedbackpacks-*.jar and sophisticatedcore-*.jar. They are
+# an optional compile-time dependency, used only to find a backpack that is being worn.
+export MODS_DIR="/path/to/instance/minecraft/mods"
+
+# Optional. A JDK 21 bin directory. Leave unset to take javac and jar from PATH.
+# export JDK="/path/to/jdk-21/bin"
+
+# Optional. Defaults to $HOME/.gradle/caches/neoformruntime.
+# export NFRT_CACHE="/path/to/.gradle/caches/neoformruntime"

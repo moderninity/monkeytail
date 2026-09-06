@@ -170,6 +170,7 @@ It is a genuinely optional dependency, and that is verified rather than assumed 
 
 ```
 build.sh                 offline build, no Gradle, no network
+build.local.sh.example   where to tell it your paths live
 src/main/java/           10 source files, no generated code
 src/main/resources/      neoforge.mods.toml, mixin config, lang
 build/                   classes and classpath lists (generated)
@@ -192,14 +193,20 @@ output/                  the built jar
 ## Building
 
 ```bash
+cp build.local.sh.example build.local.sh   # then point it at your own install
 ./build.sh
 ```
 
-Compiles against **NeoForge 21.1.233** — deliberately the oldest 21.1 in the Prism library store,
-not the newest. Building against an old API and running on a newer one is safe; the reverse is
-not. The instance runs 21.1.249. Override with `$NEOFORGE_VERSION`, `$JDK`, `$PRISM_LIBS`,
-`$MODS_DIR`, `$NFRT_CACHE` and `$PORT_TOOLS`. The two static checks below live outside this
-repository; if `port-tools/` is not beside it the jar still builds and they are skipped.
+No Gradle and no network: it compiles against jars already on your machine. Where those are is a
+property of your machine rather than of this mod, so no path is baked into `build.sh` — it reads
+`build.local.sh`, which is gitignored, and refuses with a plain message if a path is missing.
+`$PRISM_LIBS`, `$MODS_DIR`, `$JDK`, `$NFRT_CACHE`, `$NEOFORGE_VERSION` and `$PORT_TOOLS` all work
+from the environment too, and win over the file.
+
+Compiles against **NeoForge 21.1.233** — deliberately the oldest 21.1 in the library store, not
+the newest. Building against an old API and running on a newer one is safe; the reverse is not,
+so the jar stays usable on every 21.1.x from there up. The two static checks below live outside
+this repository; if `port-tools/` is not beside it the jar still builds and they are skipped.
 
 ## Verification
 
@@ -225,11 +232,8 @@ repository; if `port-tools/` is not beside it the jar still builds and they are 
 
 ## Installing
 
-Drop `monkeytail-neoforge-1.21.1-1.0.0.jar` into your instance's `mods/` folder, and take
-`holdmybeer-*.jar` out of it if it is there.
-
-The old jar **must** come out. The mod ids differ (`monkeytail` vs `holdmybeer`), so FML will
-happily load both, and both will fight over inventory slot 9.
+Drop `monkeytail-neoforge-1.21.1-1.0.0.jar` into your instance's `mods/` folder. Nothing else to
+do — no config to write, no other mod to remove.
 
 ## Known limits, deliberate
 
